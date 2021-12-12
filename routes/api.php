@@ -21,12 +21,18 @@ use Illuminate\Support\Facades\Auth;
 //     return $request->user();
 // });
 
-Route::Group(['middleware' => 'auth:sanctum'], function(){
-    Route::resource('products', ProductController::class);
-
-});
 
 //public routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+
+
+
+Route::Group(['middleware' => 'auth:sanctum'], function(){
+    Route::resource('products', ProductController::class);
+    Route::get('products/search/{keyword}', [ProductController::class, 'search']);
+    Route::post('logout', [AuthController::class, 'logout']);
+
+});
+
 

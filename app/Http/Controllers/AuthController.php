@@ -30,7 +30,7 @@ class AuthController extends Controller
         ]);
 
         //create token
-        $token = $users->createToken('my-device')->plainTextToken;
+        $token = $users->createToken($request->userAgent(), ["$users->role"])->plainTextToken;
 
         $response = [
             'user' => $users,
@@ -55,13 +55,13 @@ class AuthController extends Controller
         if(!$user || !Hash::check($fields['password'], $user->password)){
             return response([
                 'message' => 'รหัสผ่านไม่ถูกหรืออีเมลไม่ถูกต้อง'
-            ]);
+            ],401);
         }else{
 
             //ลบ token อันเก่า
             $user->tokens()->delete();
             //create token
-            $token = $user->createToken('my-device')->plainTextToken;
+            $token = $user->createToken($request->userAgent(), ["$user->role"])->plainTextToken;
 
             $response = [
                 'user' => $user,
@@ -71,9 +71,14 @@ class AuthController extends Controller
             return response($response, 201);
         }
 
+    }
 
-
-
+    //logout
+    public function logout(Request $request) {
+        auth()->user()->tokens()->delete();
+        return [
+            'msg' => 'Logout'
+        ];
     }
 
 

@@ -15,6 +15,15 @@ class Product extends Model
         'slug',
         'description',
         'price',
+        'image',
+        'user_id'
 
     ];
+
+
+    //relationship to users
+
+    public function users() {
+        return $this->belongsTo('App\Models\User', 'user_id')->select(['id', 'fullname', 'avatar']);
+    }
 }
